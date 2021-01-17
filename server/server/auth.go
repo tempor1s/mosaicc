@@ -62,7 +62,6 @@ func getPemCert(token *jwt.Token) (string, error) {
 	c := config.GetConfig()
 	cert := ""
 	url := fmt.Sprintf("%s.well-known/jwks.json", c.Auth0ID)
-	log.Println(url)
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -73,7 +72,6 @@ func getPemCert(token *jwt.Token) (string, error) {
 	var jwks Jwks
 	err = json.NewDecoder(resp.Body).Decode(&jwks)
 
-	log.Println(err)
 	if err != nil {
 		return cert, err
 	}

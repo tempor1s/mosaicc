@@ -1,37 +1,25 @@
 package server
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	"github.com/tempor1s/mosaic/handlers"
 )
 
 // Routes will register all of the routes on the server structure
 func (s *Server) Routes() {
-	// hello function
-	s.Echo.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"msg": "hello, world"})
-	})
-
+	h := handlers.New()
+	// hello route for status checks
+	s.Echo.GET("/status", h.Hello)
 	// setup api group
 	v1 := s.Echo.Group("/api/v1")
-	// enable auth middleware
+	// enable auth middleware (all routes after this point will require authorization)
 	mw := getJwtMiddleware()
 	v1.Use(echo.WrapMiddleware(mw.Handler))
 
-	// TODO: upload function
-	v1.POST("/upload", func(c echo.Context) error {
-		// TODO: return the URL of the uploaded image
-		return c.JSON(http.StatusInternalServerError, "unimplemented")
-	})
-
-	// TODO: get all images for logged in account function
-	v1.GET("/images", func(c echo.Context) error {
-		return c.JSON(http.StatusInternalServerError, "unimplemented")
-	})
-
-	// TODO: get single image by its name/id or something
-	v1.GET("/image/:id", func(c echo.Context) error {
-		return c.JSON(http.StatusInternalServerError, "unimplemented")
-	})
+	// upload image to the server (gets bound to logged in account)
+	v1.POST("/upload", h.Upload)
+	// get all images for logged in account
+	v1.GET("/images", h.Images)
+	// get a single image by its short code
+	v1.GET("/image/:id", h.Image)
 }

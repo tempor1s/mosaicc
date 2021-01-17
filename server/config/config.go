@@ -30,7 +30,5 @@ func GetConfig() *Config {
 		Auth0ID:     os.Getenv("AUTH0_API_ID"),
 	}
 
-	log.Println(config)
-
 	return config
 }
