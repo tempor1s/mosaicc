@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  Flex,
-  Box,
-  Spacer,
-  HStack,
-  Menu,
-  Button,
-  MenuButton,
-} from '@chakra-ui/react';
+import { Text, Flex, Box, Spacer, HStack, Button } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAuth0 } from '../auth';

@@ -7,4 +7,5 @@ require (
 	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/echo/v4 v4.1.17
+	go.mongodb.org/mongo-driver v1.4.4
 )

@@ -20,6 +20,9 @@ type Config struct {
 	Auth0Domain string // auth0 api domain
 	Auth0ID     string // auth0 api ID
 	AppEnv      string // the environment that the application is running in (env, prod, etc)
+	DbURI       string // database URI
+	DbUsername  string // database username
+	DbPassword  string // database password
 }
 
 // GetConfig will return the current config
@@ -28,6 +31,9 @@ func GetConfig() *Config {
 		AppEnv:      os.Getenv("APP_ENV"),
 		Auth0Domain: os.Getenv("AUTH0_DOMAIN"),
 		Auth0ID:     os.Getenv("AUTH0_API_ID"),
+		DbURI:       os.Getenv("DB_URI"),
+		DbPassword:  os.Getenv("DB_PASSWORD"),
+		DbUsername:  os.Getenv("DB_USERNAME"),
 	}
 
 	return config
