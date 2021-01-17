@@ -1,4 +1,5 @@
 {
   "domain": "dev-u8fn3fu1.us.auth0.com",
-  "clientId": "WahEAR3s17r4FCiaiI1P8UzPs2zaLZiR"
+  "clientId": "WahEAR3s17r4FCiaiI1P8UzPs2zaLZiR",
+  "audience": "https://api.mosaic.benl.dev"
 }

@@ -13,11 +13,14 @@ const LoggedIn = () => {
 
   return (
     <>
+      <Text fontWeight="bold" fontSize="3xl">
+        Your screenshots
+      </Text>
+      <Text fontSize="xl">Hello, {user.email}</Text>
       {isAuthenticated && (
         // TODO: logout
         <Button onClick={() => logout()}>Logout</Button>
       )}
-      <Text fontSize="xl">Hello, {user.email}</Text>
     </>
   );
 };
