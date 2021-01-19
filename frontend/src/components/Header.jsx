@@ -6,7 +6,7 @@ import { useAuth0 } from '../auth';
 
 // Header is the header of the web page
 const Header = () => {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
   return (
     <Flex pl={5} pr={5} pt={4} pb={6}>
@@ -22,15 +22,18 @@ const Header = () => {
         <HStack spacing={2}>
           <ColorModeSwitcher />
           {isAuthenticated ? (
-            <Button
-              onClick={() =>
-                logout({
-                  returnTo: window.location.origin,
-                })
-              }
-            >
-              Logout
-            </Button>
+            <>
+              <Text>{user.name}</Text>
+              <Button
+                onClick={() =>
+                  logout({
+                    returnTo: window.location.origin,
+                  })
+                }
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <Button onClick={() => loginWithRedirect()}>Login</Button>
           )}
