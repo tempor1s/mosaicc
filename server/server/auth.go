@@ -29,21 +29,22 @@ type JSONWebKeys struct {
 
 // getJwtMiddleware will return the jwt token middleware configuration
 func getJwtMiddleware() jwtmiddleware.JWTMiddleware {
-	c := config.GetConfig()
+	// c := config.GetConfig()
 	return *jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			// Verify 'aud' claim
-			aud := c.Auth0Domain
-			checkAud := token.Claims.(jwt.MapClaims).VerifyAudience(aud, false)
-			if !checkAud {
-				return token, errors.New("invalid audience")
-			}
-			// Verify 'iss' claim
-			iss := c.Auth0ID
-			checkIss := token.Claims.(jwt.MapClaims).VerifyIssuer(iss, false)
-			if !checkIss {
-				return token, errors.New("invalid issuer")
-			}
+			// // Verify 'aud' claim
+			// aud := c.Auth0Domain
+			// log.Println(aud)
+			// checkAud := token.Claims.(jwt.MapClaims).VerifyAudience(aud, true)
+			// if !checkAud {
+			// 	return token, errors.New("invalid audience")
+			// }
+			// // Verify 'iss' claim
+			// iss := c.Auth0ID + "/"
+			// checkIss := token.Claims.(jwt.MapClaims).VerifyIssuer(iss, false)
+			// if !checkIss {
+			// 	return token, errors.New("invalid issuer")
+			// }
 
 			cert, err := getPemCert(token)
 			if err != nil {
@@ -61,7 +62,7 @@ func getJwtMiddleware() jwtmiddleware.JWTMiddleware {
 func getPemCert(token *jwt.Token) (string, error) {
 	c := config.GetConfig()
 	cert := ""
-	url := fmt.Sprintf("%s.well-known/jwks.json", c.Auth0ID)
+	url := fmt.Sprintf("%s/.well-known/jwks.json", c.Auth0ID)
 	resp, err := http.Get(url)
 
 	if err != nil {

@@ -33,7 +33,7 @@ func GetConfig() *Config {
 		Auth0ID:     os.Getenv("AUTH0_API_ID"),
 		DbURI:       os.Getenv("DB_URI"),
 		DbPassword:  os.Getenv("DB_PASSWORD"),
-		DbUsername:  os.Getenv("DB_USERNAME"),
+		DbUsername:  os.Getenv("DB_USER"),
 	}
 
 	return config

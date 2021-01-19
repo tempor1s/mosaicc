@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -21,6 +22,12 @@ func New(db *mongo.Database) *Server {
 
 // Start will start the http server
 func (s *Server) Start(port string) {
+	// cors middleware
+	s.Echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"*"},
+		AllowCredentials: true,
+	}))
+
 	// register the routes
 	s.Routes()
 
