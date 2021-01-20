@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
-import { Text, Flex, useToast } from '@chakra-ui/react';
+import { Text, Flex, useToast, useTheme } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useAuth0 } from '../auth';
-import { Redirect } from 'react-router-dom';
 
 const Upload = ({ images, setImages }) => {
   const { getTokenSilently } = useAuth0();
+  const theme = useTheme();
   const toast = useToast();
 
   const onDrop = useCallback(
@@ -49,7 +49,7 @@ const Upload = ({ images, setImages }) => {
         });
 
         // if images already exist
-        if (images) {
+        if (images || images.lenght > 0) {
           setImages([...images, JSON.parse(response)]);
         }
 
@@ -67,9 +67,10 @@ const Upload = ({ images, setImages }) => {
       justify="center"
       align="center"
       textAlign="center"
-      bg="#dadada"
+      bg={theme.background}
+      borderWidth="1px"
       w={250}
-      h={250}
+      h={100}
       p={50}
       m={2}
       borderRadius={5}

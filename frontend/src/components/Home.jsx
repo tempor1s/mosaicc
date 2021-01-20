@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '../auth';
-import { Box, Spinner, Text, Wrap, WrapItem, Image } from '@chakra-ui/react';
+import { Box, Spinner, Text, Grid, Divider } from '@chakra-ui/react';
 import Upload from './Upload';
+
+import Image from './Image';
 
 const Home = () => {
   const { loading, user, isAuthenticated, getTokenSilently } = useAuth0();
@@ -47,27 +49,36 @@ const Home = () => {
   }
 
   return (
-    <Box>
-      <Upload images={images} setImages={setImages} />
-      <Text fontSize="xl">
-        Hello, {user.name} ({user.sub})
+    <Box pl="12" pr="12">
+      <Text fontSize="4xl" fontWeight="bold" pb="16" pb="16">
+        Hello, {user.name}
       </Text>
-      <Text fontWeight="bold" fontSize="3xl">
+      <Text fontSize="3xl" fontWeight="bold">
+        Upload
+      </Text>
+      <Divider />
+      <Upload images={images} setImages={setImages} />
+      <Text fontWeight="bold" fontSize="4xl">
         Your images
       </Text>
-      <Wrap align="center">
+      <Divider />
+      <Grid
+        pl="5"
+        pr="5"
+        pt="2"
+        templateColumns="repeat(2, 1fr)"
+        gap="6"
+        alignContent="center"
+        justifyItems="center"
+      >
         {images ? (
           images.map((img, i) => {
-            return (
-              <WrapItem>
-                <Image key={i} boxSize="md" src={img.short_url} />
-              </WrapItem>
-            );
+            return <Image img={img} key={i} />;
           })
         ) : (
           <Text>No images on your account</Text>
         )}
-      </Wrap>
+      </Grid>
     </Box>
   );
 };
