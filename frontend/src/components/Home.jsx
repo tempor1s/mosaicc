@@ -49,11 +49,14 @@ const Home = () => {
   }
 
   return (
-    <Box pl="12" pr="12">
-      <Text fontSize="4xl" fontWeight="bold" pb="16" pb="16">
+    <Box pl="12" pr="12" pt="4rem">
+      <Text fontSize="4xl" fontWeight="bold">
         Hello, {user.name}
       </Text>
-      <Text fontSize="3xl" fontWeight="bold">
+      <Text fontSize="2xl" fontWeight="bold">
+        You have {images ? images.length : 0} images
+      </Text>
+      <Text fontSize="3xl" pt="4rem" fontWeight="bold">
         Upload
       </Text>
       <Divider />
@@ -73,7 +76,11 @@ const Home = () => {
       >
         {images ? (
           images.map((img, i) => {
-            return <Image img={img} key={i} />;
+            return (
+              <Box key={i}>
+                <Image images={images} setImages={setImages} img={img} />
+              </Box>
+            );
           })
         ) : (
           <Text>No images on your account</Text>
