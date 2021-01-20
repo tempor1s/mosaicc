@@ -10,30 +10,32 @@ const Upload = ({ images, setImages }) => {
 
   const onDrop = useCallback(
     acceptedFiles => {
-      // Do something with the files
-      acceptedFiles.map(async (file, i) => {
-        const token = await getTokenSilently();
-        // create form data body with image to post to backend
-        let formData = new FormData();
-        formData.append('image', file);
+      if (acceptedFiles) {
+        // Do something with the files
+        acceptedFiles.map(async (file, i) => {
+          const token = await getTokenSilently();
+          // create form data body with image to post to backend
+          let formData = new FormData();
+          formData.append('image', file);
 
-        let request = new XMLHttpRequest();
-        request.open(
-          'POST',
-          process.env.REACT_APP_BACKEND_URL + '/api/v1/upload'
-        );
-        request.setRequestHeader('Authorization', `Bearer ${token}`);
+          let request = new XMLHttpRequest();
+          request.open(
+            'POST',
+            process.env.REACT_APP_BACKEND_URL + '/api/v1/upload'
+          );
+          request.setRequestHeader('Authorization', `Bearer ${token}`);
 
-        request.onreadystatechange = function () {
-          if (request.readyState === 4) {
-            handleResponse(request.response, i);
-          }
-        };
+          request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+              handleResponse(request.response, i);
+            }
+          };
 
-        request.send(formData);
+          request.send(formData);
 
-        return;
-      });
+          return;
+        });
+      }
 
       // handleResponse is the callback that will be called when an image is uploaded
       const handleResponse = (response, i) => {
@@ -46,7 +48,13 @@ const Upload = ({ images, setImages }) => {
           isClosable: true,
         });
 
-        setImages([...images, JSON.parse(response)]);
+        // if images already exist
+        if (images) {
+          setImages([...images, JSON.parse(response)]);
+        }
+
+        // otherwise the current image is the first one
+        setImages([JSON.parse(response)]);
       };
     },
     // eslint-disable-next-line

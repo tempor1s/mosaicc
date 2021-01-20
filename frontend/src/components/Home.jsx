@@ -40,27 +40,33 @@ const Home = () => {
   }
 
   // sort images by date so that new images are at the top left
-  images.sort((a, b) => {
-    return new Date(b.upload_date) - new Date(a.upload_date);
-  });
+  if (images && images.length > 0) {
+    images.sort((a, b) => {
+      return new Date(b.upload_date) - new Date(a.upload_date);
+    });
+  }
 
   return (
     <Box>
-      <Text fontWeight="bold" fontSize="3xl">
-        Your images
-      </Text>
       <Upload images={images} setImages={setImages} />
       <Text fontSize="xl">
         Hello, {user.name} ({user.sub})
       </Text>
-      <Wrap>
-        {images.map((img, i) => {
-          return (
-            <WrapItem>
-              <Image key={i} boxSize="md" src={img.short_url} />
-            </WrapItem>
-          );
-        })}
+      <Text fontWeight="bold" fontSize="3xl">
+        Your images
+      </Text>
+      <Wrap align="center">
+        {images ? (
+          images.map((img, i) => {
+            return (
+              <WrapItem>
+                <Image key={i} boxSize="md" src={img.short_url} />
+              </WrapItem>
+            );
+          })
+        ) : (
+          <Text>No images on your account</Text>
+        )}
       </Wrap>
     </Box>
   );
