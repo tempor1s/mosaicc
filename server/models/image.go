@@ -9,10 +9,11 @@ import (
 
 // Image represents an uploaded image in the database
 type Image struct {
-	UserID   string `json:"-" bson:"user_id"`           // the ID of the auth0 user who owns the image
-	FullURL  string `json:"full_url" bson:"full_url"`   // the full URL of the image (stored on google cloud storage)
-	ShortURL string `json:"short_url" bson:"short_url"` // the CDN url of the iamge (stored on google cloud cdn)
-	Name     string `json:"img_name" bson:"img_name"`   // the name of the image
+	UserID       string `json:"-" bson:"user_id"`                   // the ID of the auth0 user who owns the image
+	FullURL      string `json:"full_url" bson:"full_url"`           // the full URL of the image (stored on google cloud storage)
+	ShortURL     string `json:"short_url" bson:"short_url"`         // the CDN url of the iamge (stored on google cloud cdn)
+	Name         string `json:"img_name" bson:"img_name"`           // the name of the image (what the image was named when it was uploaded)
+	UploadedName string `json:"uploaded_name" bson:"uploaded_name"` // the name of the image when it gets uploaded to google cloud (different than given name)
 }
 
 // CreateImage will create a new image object in the database

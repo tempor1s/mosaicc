@@ -20,6 +20,4 @@ func (s *Server) Routes() {
 	v1.POST("/upload", h.Upload)
 	// get all images for logged in account
 	v1.GET("/images", h.Images)
-	// get a single image by its short code
-	v1.GET("/image/:id", h.Image)
 }
