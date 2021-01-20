@@ -36,7 +36,6 @@ func (s *Store) CreateImage(img Image) error {
 func (s *Store) GetImagesByUser(id string) ([]Image, error) {
 	// get the images collection
 	collection := s.Database.Collection("images")
-
 	ctx := context.Background()
 
 	// empty image array to decode into
@@ -51,4 +50,35 @@ func (s *Store) GetImagesByUser(id string) ([]Image, error) {
 	}
 
 	return images, nil
+}
+
+// GetImageByID will get the image by its object id
+func (s *Store) GetImageByID(id string) (Image, error) {
+	// get the images collection
+	collection := s.Database.Collection("images")
+	ctx := context.Background()
+
+	// get the database image
+	var image Image
+	err := collection.FindOne(ctx, bson.M{"img_name": id}).Decode(&image)
+	if err != nil {
+		return Image{}, err
+	}
+
+	return image, nil
+}
+
+// DeleteImageByID will delete the image with the given ID
+func (s *Store) DeleteImageByID(id string) error {
+	// get the images collection
+	collection := s.Database.Collection("images")
+	ctx := context.Background()
+
+	// get the database image
+	_, err := collection.DeleteOne(ctx, bson.M{"img_name": id})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

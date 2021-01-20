@@ -20,4 +20,6 @@ func (s *Server) Routes() {
 	v1.POST("/upload", h.Upload)
 	// get all images for logged in account
 	v1.GET("/images", h.Images)
+	// delete an image for a logged in account
+	v1.DELETE("/image/:objectID", h.DeleteImage)
 }
