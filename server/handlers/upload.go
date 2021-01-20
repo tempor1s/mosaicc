@@ -74,6 +74,7 @@ func (h *Handlers) Upload(c echo.Context) error {
 		UserID:       userID,         // set the user ID in the DB to be that from auth
 		Name:         file.Basename,  // the new name of the file (generated)
 		UploadedName: image.Filename, // the original name of the file
+		UploadDate:   time.Now(),     // when the file was uploaded (for sorting)
 	}
 
 	store := models.NewStore(h.Database)

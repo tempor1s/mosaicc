@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // components
 import Home from './components/Home';
 import Header from './components/Header';
+import Upload from './components/Upload';
 
 const App = () => {
   const { loading } = useAuth0();

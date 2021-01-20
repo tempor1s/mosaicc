@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '../auth';
 import { Box, Spinner, Text, Wrap, WrapItem, Image } from '@chakra-ui/react';
+import Upload from './Upload';
 
 const Home = () => {
   const { loading, user, isAuthenticated, getTokenSilently } = useAuth0();
@@ -43,6 +44,7 @@ const Home = () => {
       <Text fontWeight="bold" fontSize="3xl">
         Your images
       </Text>
+      <Upload images={images} setImages={setImages} />
       <Text fontSize="xl">
         Hello, {user.name} ({user.sub})
       </Text>
