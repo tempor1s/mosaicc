@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '../auth';
-import {
-  Container,
-  Spinner,
-  Text,
-  Wrap,
-  WrapItem,
-  Image,
-} from '@chakra-ui/react';
+import { Box, Spinner, Text, Wrap, WrapItem, Image } from '@chakra-ui/react';
 
 const Home = () => {
   const { loading, user, isAuthenticated, getTokenSilently } = useAuth0();
@@ -46,7 +39,7 @@ const Home = () => {
   }
 
   return (
-    <Container>
+    <Box>
       <Text fontWeight="bold" fontSize="3xl">
         Your images
       </Text>
@@ -62,7 +55,7 @@ const Home = () => {
           );
         })}
       </Wrap>
-    </Container>
+    </Box>
   );
 };
 

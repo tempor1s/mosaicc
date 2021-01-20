@@ -1,9 +1,7 @@
 package file
 
 import (
-	"io"
 	"mime/multipart"
-	"os"
 	"path/filepath"
 )
 
@@ -29,30 +27,6 @@ func NewFile(file multipart.File, fileHeader *multipart.FileHeader) *File {
 		MIMEType:  fileHeader.Header["Content-Type"][0],
 		Size:      int(fileHeader.Size),
 	}
-}
-
-// Place will move the file onto a specific location.
-// Returns os package errors. (os.ErrFileExist and os.ErrPermission)
-func (f *File) Place(location string) error {
-	fullpath := filepath.Join(location, f.Fullname)
-	_, err := os.Stat(fullpath)
-	if !os.IsNotExist(err) {
-		return os.ErrExist
-	}
-
-	file, err := os.OpenFile(fullpath, os.O_WRONLY|os.O_CREATE, 0644)
-	if err != nil {
-		return err
-	}
-
-	defer file.Close()
-
-	_, err = io.Copy(file, f.File)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // GenerateName will generate a new name with a given length.

@@ -7,7 +7,7 @@ import (
 
 // Routes will register all of the routes on the server structure
 func (s *Server) Routes() {
-	h := handlers.New(s.Database)
+	h := handlers.New(s.Database, s.StorageClient)
 	// hello route for status checks
 	s.Echo.GET("/status", h.Hello)
 	// setup api group

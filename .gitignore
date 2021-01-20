@@ -3,3 +3,4 @@ mosaic
 .DS_Store
 node_modules
 frontend/.eslintcache
+mosaic-gcp.json
