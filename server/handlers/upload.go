@@ -42,8 +42,8 @@ func (h *Handlers) Upload(c echo.Context) error {
 
 	// create in memory version of the file
 	file := file.NewFile(openedFile, image)
-	// give the file a nice name for uploading (length of 7 for now)
-	file.GenerateName(7)
+	// give the file a nice name for uploading (length of 6 for now and should always be unique)
+	file.GenerateName(h.Database, 6)
 
 	// upload context
 	ctx := context.Background()

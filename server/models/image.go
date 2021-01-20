@@ -2,10 +2,12 @@ package models
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Image represents an uploaded image in the database
@@ -53,7 +55,8 @@ func (s *Store) GetImagesByUser(id string) ([]Image, error) {
 }
 
 // GetImageByID will get the image by its object id
-func (s *Store) GetImageByID(id string) (Image, error) {
+// the (bool) represents if the image exists or not
+func (s *Store) GetImageByID(id string) (Image, bool, error) {
 	// get the images collection
 	collection := s.Database.Collection("images")
 	ctx := context.Background()
@@ -61,11 +64,18 @@ func (s *Store) GetImageByID(id string) (Image, error) {
 	// get the database image
 	var image Image
 	err := collection.FindOne(ctx, bson.M{"img_name": id}).Decode(&image)
+
 	if err != nil {
-		return Image{}, err
+		if errors.Is(err, mongo.ErrNilDocument) {
+			// does not exist because document not found
+			return Image{}, false, errors.New("image not found")
+		}
+		// does not exist and other err
+		return Image{}, false, err
 	}
 
-	return image, nil
+	// image exists, and return it with no err
+	return image, true, nil
 }
 
 // DeleteImageByID will delete the image with the given ID

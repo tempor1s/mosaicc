@@ -27,7 +27,12 @@ func (h *Handlers) DeleteImage(c echo.Context) error {
 
 	// use the object ID to get the image from the database
 	store := models.NewStore(h.Database)
-	dbImage, err := store.GetImageByID(objectID)
+	dbImage, exists, err := store.GetImageByID(objectID)
+
+	// if the image does not exist, we cant delete it
+	if !exists {
+		return echo.NewHTTPError(http.StatusInternalServerError, "image does not exist")
+	}
 
 	// if they do not have permissions, return an error
 	if dbImage.UserID != userID {
