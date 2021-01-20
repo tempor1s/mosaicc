@@ -39,6 +39,11 @@ const Home = () => {
     return <Text align="center">Please login to view your images.</Text>;
   }
 
+  // sort images by date so that new images are at the top left
+  images.sort((a, b) => {
+    return new Date(b.upload_date) - new Date(a.upload_date);
+  });
+
   return (
     <Box>
       <Text fontWeight="bold" fontSize="3xl">
