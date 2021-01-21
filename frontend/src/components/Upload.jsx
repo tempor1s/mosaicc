@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
 import { Text, Flex, useToast, useTheme } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
-import { useAuth0 } from '../auth';
+import { useAuth0 } from '../util/auth';
+import { useQueryClient } from 'react-query';
 
-const Upload = ({ images, setImages }) => {
+const Upload = () => {
   const { getTokenSilently } = useAuth0();
   const theme = useTheme();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const onDrop = useCallback(
     acceptedFiles => {
@@ -27,7 +29,16 @@ const Upload = ({ images, setImages }) => {
 
           request.onreadystatechange = function () {
             if (request.readyState === 4) {
-              handleResponse(request.response, i);
+              toast({
+                title: 'Uploaded',
+                position: 'bottom-right',
+                description: `Uploaded image #${i + 1}`,
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+              });
+
+              queryClient.invalidateQueries();
             }
           };
 
@@ -36,30 +47,11 @@ const Upload = ({ images, setImages }) => {
           return;
         });
       }
-
-      // handleResponse is the callback that will be called when an image is uploaded
-      const handleResponse = (response, i) => {
-        toast({
-          title: 'Uploaded',
-          position: 'bottom-right',
-          description: `Uploaded image #${i + 1}`,
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-
-        // if images already exist
-        if (images || images.lenght > 0) {
-          setImages([...images, JSON.parse(response)]);
-        }
-
-        // otherwise the current image is the first one
-        setImages([JSON.parse(response)]);
-      };
     },
     // eslint-disable-next-line
-    [images]
+    []
   );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (

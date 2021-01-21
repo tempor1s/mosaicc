@@ -1,12 +1,14 @@
 import React from 'react';
 import { ChakraProvider, theme, Spinner } from '@chakra-ui/react';
-import { useAuth0 } from './auth';
+import { useAuth0 } from './util/auth';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // components
 import Home from './components/Home';
 import Header from './components/Header';
-import Upload from './components/Upload';
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const { loading } = useAuth0();
@@ -17,14 +19,16 @@ const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Router>
-        <Header />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Router>
+      </QueryClientProvider>
     </ChakraProvider>
   );
 };

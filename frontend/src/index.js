@@ -2,8 +2,8 @@ import { ColorModeScript } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { Auth0Provider } from './auth';
-import history from './history';
+import { Auth0Provider } from './util/auth';
+import history from './util/history';
 import config from './auth_config.json';
 
 // A function that routes the user to the right place

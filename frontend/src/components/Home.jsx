@@ -1,47 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth0 } from '../auth';
+import React from 'react';
+import { useAuth0 } from '../util/auth';
 import { Box, Spinner, Text, Grid, Divider } from '@chakra-ui/react';
-import Upload from './Upload';
+import { useQuery } from 'react-query';
+import { GetAxiosInstance } from '../util/axios.custom';
 
+// components
+import Upload from './Upload';
 import Image from './Image';
 
 const Home = () => {
-  const { loading, user, isAuthenticated, getTokenSilently } = useAuth0();
-  const [images, setImages] = useState([]);
+  // hooks
+  const auth0Hook = useAuth0();
+  const query = useQuery('images', async () => {
+    const token = await auth0Hook.getTokenSilently();
 
-  useEffect(() => {
-    const getImages = async () => {
-      try {
-        // get the oauth token for the get request
-        const token = await getTokenSilently();
-        // get all the images for the user
-        let URL = process.env.REACT_APP_BACKEND_URL + '/api/v1/images';
-        const response = await fetch(URL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    try {
+      const axios = GetAxiosInstance(token);
+      // get the images from the backend
+      const resp = await axios.get('/images');
 
-        const responseData = await response.json();
-        setImages(responseData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      return resp.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('could not get images');
+    }
+  });
 
-    getImages();
-    // eslint-disable-next-line
-  }, []);
-
-  if (loading) {
+  // if something is still loading
+  if (auth0Hook.loading || query.loading) {
     return <Spinner />;
   }
 
-  if (!isAuthenticated) {
+  // if the user is not authenticated
+  if (!auth0Hook.isAuthenticated) {
     return <Text align="center">Please login to view your images.</Text>;
   }
 
-  // sort images by date so that new images are at the top left
+  let images = query.data;
+
+  // sort images by date so that new images are at the front of the list
   if (images && images.length > 0) {
     images.sort((a, b) => {
       return new Date(b.upload_date) - new Date(a.upload_date);
@@ -51,7 +48,7 @@ const Home = () => {
   return (
     <Box pl="12" pr="12" pt="4rem">
       <Text fontSize="4xl" fontWeight="bold">
-        Hello, {user.name}
+        Hello, {auth0Hook.user.name}
       </Text>
       <Text fontSize="2xl" fontWeight="bold">
         You have {images ? images.length : 0} images
@@ -60,7 +57,7 @@ const Home = () => {
         Upload
       </Text>
       <Divider />
-      <Upload images={images} setImages={setImages} />
+      <Upload />
       <Text fontWeight="bold" fontSize="4xl">
         Your images
       </Text>
@@ -78,7 +75,7 @@ const Home = () => {
           images.map((img, i) => {
             return (
               <Box key={i}>
-                <Image images={images} setImages={setImages} img={img} />
+                <Image images={images} img={img} />
               </Box>
             );
           })

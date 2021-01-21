@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, Flex, Box, Spacer, HStack, Button } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAuth0 } from '../auth';
+import { useAuth0 } from '../util/auth';
 
 // Header is the header of the web page
 const Header = () => {
