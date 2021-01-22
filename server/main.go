@@ -1,3 +1,5 @@
+// +build !appengine !appenginevm
+
 package main
 
 import (
@@ -9,6 +11,6 @@ func main() {
 	// connect to db
 	database := db.Connect()
 	// create a new server and start it
-	server := server.New(database)
+	server := server.New(database, false)
 	server.Start(":8080")
 }

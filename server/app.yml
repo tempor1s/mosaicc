@@ -1,0 +1,9 @@
+runtime: go115 # go 1.15 runtime version
+
+# include credentials for deployment
+includes:
+  - creds.yml
+
+handlers:
+  - url: /.*
+    script: auto

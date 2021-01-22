@@ -51,8 +51,11 @@ const Delete = ({ img }) => {
     }
   );
 
-  // TODO: do the delete post request and modfiy image state to reflect new changes
   const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const onDelete = () => {
     // delete the image
     mutation.mutate();
 
@@ -86,7 +89,7 @@ const Delete = ({ img }) => {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
+              <Button colorScheme="red" onClick={onDelete} ml={3}>
                 Delete
               </Button>
             </AlertDialogFooter>
