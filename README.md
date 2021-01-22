@@ -2,11 +2,11 @@
 
 Mosaic is an image repository that is designed to host and manage screenshots that you have taken. Since these type of images are more of a temporary
 
+View a hosted version [here](https://mosaic.benl.dev).
+
 ![homepage screenshot](./docs/media/homepage.png)
 
-## Live Version
 
-A live version will be deployed shortly so you can upload your own images!
 
 ## Development
 
