@@ -5,3 +5,4 @@ node_modules
 frontend/.eslintcache
 mosaic-gcp.json
 creds.yml
+./client/client
