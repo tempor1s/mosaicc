@@ -2,20 +2,34 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/getlantern/systray"
 	"github.com/getlantern/systray/example/icon"
+	"github.com/tempor1s/mosaic/client/watcher"
 )
 
-func main() {
-	onExit := func() {
-		// TODO: cleanup
-	}
-
-	systray.Run(onReady, onExit)
+// State represents some of the internal app state that that the local client needs
+type State struct {
+	Watcher *watcher.FileWatcher // the folder watcher for auto-uploads
 }
 
-func onReady() {
+func main() {
+	w := watcher.New("/Users/ben/dev/go/mosaic/client/test")
+
+	d := State{
+		Watcher: w,
+	}
+
+	onExit := func() {
+		// cleanup the file watcher
+		d.Watcher.Stop()
+	}
+
+	systray.Run(d.onReady, onExit)
+}
+
+func (s *State) onReady() {
 	systray.SetTemplateIcon(icon.Data, icon.Data)
 	systray.SetTooltip("Manage the Mosaic screenshot tool.")
 
@@ -58,26 +72,20 @@ func onReady() {
 
 	systray.AddSeparator()
 
-	mUploadClipboard := systray.AddMenuItemCheckbox("Upload from clipboard", "Upload files that are copied from your clipboard", true)
-	go func() {
-		for {
-			<-mUploadClipboard.ClickedCh
-			if mUploadClipboard.Checked() {
-				mUploadClipboard.Uncheck()
-			} else {
-				mUploadClipboard.Check()
-			}
-		}
-	}()
-
 	mUploadFolder := systray.AddMenuItemCheckbox("Upload from folder", "Upload all the files that are created in a folder.", false)
 	go func() {
 		for {
 			<-mUploadFolder.ClickedCh
 			if mUploadFolder.Checked() {
+				log.Println("Stopping watcher...")
+
 				mUploadFolder.Uncheck()
+				go s.Watcher.Stop()
 			} else {
+				log.Println("Starting watcher...")
+
 				mUploadFolder.Check()
+				go s.Watcher.Start()
 			}
 		}
 	}()
