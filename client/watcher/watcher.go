@@ -10,21 +10,29 @@ import (
 
 	"github.com/atotto/clipboard"
 	"github.com/fsnotify/fsnotify"
+	"github.com/tempor1s/mosaic/client/sound"
 	"github.com/tempor1s/mosaic/client/upload"
 )
 
 // FileWatcher is a structure that will keep track and upload all of the files that are in a folder
 type FileWatcher struct {
 	mu      sync.Mutex        // mutex lock
-	Started bool              // if the watcher has been started
-	Folder  string            // the folder to watch
-	Watcher *fsnotify.Watcher // notify file watcher
+	started bool              // if the watcher has been started
+	sound   bool              // if the file watcher should play sounds on upload, etc
+	folder  string            // the folder to watch
+	watcher *fsnotify.Watcher // notify file watcher
+	player  *sound.Player     // sound player for upload sounds
 }
 
 // New will return a new file watcher
 func New(folder string) *FileWatcher {
+	// may need to be changed to use absolute directory (or add file to users home dir or something)
+	s := sound.NewPlayer("./sound/beep.mp3")
+
 	return &FileWatcher{
-		Folder: folder,
+		folder: folder,
+		player: s, // for upload sound
+		sound:  true,
 	}
 }
 
@@ -34,7 +42,7 @@ func (f *FileWatcher) Start() error {
 	defer f.mu.Unlock()
 
 	// dont start the watcher again if its already started
-	if f.Started {
+	if f.started {
 		log.Println("could not start watcher. watcher already started")
 		return errors.New("could not start watcher. watcher already started")
 	}
@@ -46,9 +54,8 @@ func (f *FileWatcher) Start() error {
 	}
 
 	// assign the watcher so we can manage it
-	f.Watcher = w
+	f.watcher = w
 
-	done := make(chan bool)
 	go func() {
 		for {
 			select {
@@ -83,6 +90,11 @@ func (f *FileWatcher) Start() error {
 						log.Println("failed to copy url to clipboard. err:", err)
 						return
 					}
+
+					// if we can play sound
+					if f.sound {
+						f.player.Play()
+					}
 				}
 			case err, ok := <-w.Errors:
 				if !ok {
@@ -95,13 +107,12 @@ func (f *FileWatcher) Start() error {
 	}()
 
 	// start the watcher on the given folder
-	if err := f.Watcher.Add(f.Folder); err != nil {
+	if err := f.watcher.Add(f.folder); err != nil {
 		fmt.Println("error creating watcher for that folder. err:", err)
 	}
 
-	f.Started = true
-
-	<-done
+	// the watcher is now started
+	f.started = true
 
 	return nil
 }
@@ -112,6 +123,17 @@ func (f *FileWatcher) Stop() {
 	defer f.mu.Unlock()
 
 	// stop the watcher
-	f.Watcher.Close()
-	f.Started = false
+	f.watcher.Close()
+	// the watcher is now stoped
+	f.started = false
+}
+
+// ToggleSound will take the current value of the sound state and set it to the opposite
+func (f *FileWatcher) ToggleSound() {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	// set sound to be the opposite of what it is
+	f.sound = !f.sound
+	log.Println("set sound value to:", f.sound)
 }

@@ -92,6 +92,28 @@ func (s *State) onReady() {
 
 	// add seperator
 	systray.AddSeparator()
+
+	// all the user to toggle image upload sound
+	mUploadSound := systray.AddMenuItemCheckbox("Sound", "Play a sound when the image is uploaded", true)
+	go func() {
+		for {
+			<-mUploadSound.ClickedCh
+
+			if mUploadSound.Checked() {
+				log.Println("Turning off notification sound.")
+
+				mUploadSound.Uncheck()
+				go s.Watcher.ToggleSound()
+			} else {
+				log.Println("Turning on notification sound.")
+
+				mUploadSound.Check()
+				go s.Watcher.ToggleSound()
+			}
+
+		}
+	}()
+
 	// menu option to quit the application
 	mQuit := systray.AddMenuItem("Quit Mosaic", "Quit Mosaic")
 	// listen for close event (clicked on "Quit")
